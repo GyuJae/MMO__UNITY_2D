@@ -10,5 +10,13 @@ public static class Define
         Left,
         Right,
     }
+    
+    public enum Scene
+    {
+        Unknown,
+        Login,
+        Lobby,
+        Game,
+    }
 }
 

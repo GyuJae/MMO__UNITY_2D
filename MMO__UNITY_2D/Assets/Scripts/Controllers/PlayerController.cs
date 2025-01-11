@@ -5,7 +5,7 @@ using static Define;
 
 public class PlayerController : MonoBehaviour
 {
-    public Grid grid;
+
     public float moveSpeed = 5f;
     public Vector3Int cellPos = Vector3Int.zero;
     
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     
     void Start()
     {
-        Vector3 pos = grid.CellToWorld(cellPos) + new Vector3(-0.5f, -0.5f);
+        Vector3 pos = Managers.Map.CurrentGrid.CellToWorld(cellPos) + new Vector3(-0.5f, -0.5f);
         transform.position = pos;
         _animator = GetComponent<Animator>();
     }
@@ -82,11 +82,18 @@ public class PlayerController : MonoBehaviour
         UpdateIsMoving();
     }
 
+    void LateUpdate()
+    {
+        if (Camera.main == null) return;
+        var z = Camera.main.transform.position.z;
+        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, z);
+    }
+
     void UpdatePosition()
     {
         if (!_isMoving) return;
         
-        var destination = grid.CellToWorld(cellPos) + new Vector3(-0.5f, -0.5f);
+        var destination = Managers.Map.CurrentGrid.CellToWorld(cellPos) + new Vector3(-0.5f, -0.5f);
         var moveDir = destination - transform.position;
         
         var distance = moveDir.magnitude;
@@ -104,31 +111,32 @@ public class PlayerController : MonoBehaviour
 
     void UpdateIsMoving()
     {
-        if (_isMoving != false) return;
-     
+        if (_isMoving != false || _moveDir == MoveDir.None) return;
+        var destPos = cellPos;
+        
         switch (_moveDir)
         {
             case MoveDir.Up:
-                cellPos += Vector3Int.up;
-                _isMoving = true;
+                destPos += Vector3Int.up;
                 break;
             case MoveDir.Down:
-                cellPos += Vector3Int.down;
-                _isMoving = true;
+                destPos += Vector3Int.down;
                 break;
             case MoveDir.Left:
-                cellPos += Vector3Int.left;
-                _isMoving = true;
+                destPos += Vector3Int.left;
                 break;
             case MoveDir.Right:
-                cellPos += Vector3Int.right;
-                _isMoving = true;
+                destPos += Vector3Int.right;
                 break;
             case MoveDir.None:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        if (!Managers.Map.CanGo(destPos)) return;
+        cellPos = destPos;
+        _isMoving = true;
     }
 
     void UpdateDirection()
