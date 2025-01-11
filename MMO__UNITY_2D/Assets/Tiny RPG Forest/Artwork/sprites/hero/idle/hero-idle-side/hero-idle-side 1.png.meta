@@ -1,12 +1,5 @@
 fileFormatVersion: 2
-guid: eef3b797d962d47419f4db6cf5144059
-AssetOrigin:
-  serializedVersion: 1
-  productId: 114685
-  packageName: Tiny RPG - Forest
-  packageVersion: 1.0
-  assetPath: Assets/Tiny RPG Forest/Artwork/sprites/hero/attack/hero-attack-front/hero-attack-front-2.png
-  uploadId: 236522
+guid: f34cf2cc8c0a79f4b953ce42de3d97f7
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
